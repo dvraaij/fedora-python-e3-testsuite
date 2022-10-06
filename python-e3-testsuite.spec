@@ -1,7 +1,7 @@
 # Upstream source information.
 %global upstream_owner    AdaCore
 %global upstream_name     e3-testsuite
-%global upstream_version  24.0
+%global upstream_version  25.0
 %global upstream_gittag   v%{upstream_version}
 
 # Python Package Index name.
@@ -112,6 +112,8 @@ find %{buildroot} -exec stat --format "%A %n" {} \;
 %{_bindir}/e3-find-skipped-tests
 %{_bindir}/e3-test
 %{_bindir}/e3-testsuite-report
+%{_bindir}/e3-opt-parser
+%{_bindir}/e3-run-test-fragment
 %{python3_sitelib}/e3_testsuite-*-py3.*-nspkg.pth
 
 
@@ -120,5 +122,8 @@ find %{buildroot} -exec stat --format "%A %n" {} \;
 ###############
 
 %changelog
+* Sun Oct 02 2022 Dennis van Raaij <dvraaij@fedoraproject.org> - 25.0-1
+Updated to v25.0.
+
 * Sun Sep 04 2022 Dennis van Raaij <dvraaij@fedoraproject.org> - 24.0-1
 New package.
