@@ -1,0 +1,10 @@
+--- a/tox.ini
++++ b/tox.ini
+@@ -4,7 +4,6 @@
+ [testenv]
+ deps =
+      pytest
+-     pytest-catchlog
+      mock
+      httpretty
+      e3-core
