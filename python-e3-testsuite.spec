@@ -1,9 +1,12 @@
 # OPEN-ISSUE: Documentation license is missing.
 
+# Optionally build the docs.
+%bcond_with docs
+
 # Upstream source information.
 %global upstream_owner    AdaCore
 %global upstream_name     e3-testsuite
-%global upstream_version  25.0
+%global upstream_version  26.0
 %global upstream_gittag   v%{upstream_version}
 
 # Python Package Index name.
@@ -22,16 +25,13 @@ Source:         %{url}/archive/%{upstream_gittag}/%{upstream_name}-%{upstream_ve
 BuildArch:      noarch
 BuildRequires:  python3-devel
 BuildRequires:  python3-tox
-# For building the documentation.
+%if %{with docs}
 BuildRequires:  python3-sphinx
 BuildRequires:  python3-sphinx-latex
 BuildRequires:  python3-sphinx_rtd_theme
 BuildRequires:  latexmk
 BuildRequires:  make
-
-# [Fedora-specific] PyPI package `pytest-catchlog` has been merged into the `pytest` core package.
-Patch:          %{name}-pytest-catchlog-is-merged-into-core.patch
-
+%endif
 
 %global common_description_en \
 A testsuite driver for the e3 build system.
@@ -49,6 +49,7 @@ Summary:    %{summary}
 %description -n python3-%{pypi_name} %{common_description_en}
 
 
+%if %{with docs}
 %package doc
 Summary:        Documentation for e3-testsuite
 BuildArch:      noarch
@@ -56,6 +57,7 @@ BuildArch:      noarch
 %description doc %{common_description_en}
 
 This package contains the documentation in HTML.
+%endif
 
 
 #############
@@ -84,7 +86,9 @@ This package contains the documentation in HTML.
 %pyproject_wheel
 
 # Build the documentation.
+%if %{with docs}
 make -C doc html
+%endif
 
 
 #############
@@ -103,12 +107,11 @@ make -C doc html
 %pyproject_save_files e3
 
 # Copy the documentation.
+%if %{with docs}
 mkdir --parents %{buildroot}%{_pkgdocdir}/html
 cp --recursive --preserve=timestamps \
    doc/_build/html/* %{buildroot}%{_pkgdocdir}/html
-
-# Show installed files (to ease debugging based on build server logs).
-find %{buildroot} -exec stat --format "%A %n" {} \;
+%endif
 
 
 ###########
@@ -131,15 +134,18 @@ find %{buildroot} -exec stat --format "%A %n" {} \;
 %{_bindir}/e3-testsuite-report
 %{_bindir}/e3-opt-parser
 %{_bindir}/e3-run-test-fragment
+%{_bindir}/e3-convert-xunit
 %{python3_sitelib}/e3_testsuite-*-py3.*-nspkg.pth
 
 
+%if %{with docs}
 %files doc
 %dir %{_pkgdocdir}
 %{_pkgdocdir}/html
 # Remove Sphinx-generated files that aren't needed in the package.
 %exclude %{_pkgdocdir}/html/objects.inv
 %exclude %{_pkgdocdir}/html/objects.inv
+%endif
 
 
 ###############
@@ -147,6 +153,10 @@ find %{buildroot} -exec stat --format "%A %n" {} \;
 ###############
 
 %changelog
+* Sun Jan 21 2024 Dennis van Raaij <dvraaij@fedoraproject.org> - 26.0-1
+- Updated to v26.0.
+- Documentation now optional: missing license, missing Spinx AutoAPI extension.
+
 * Sun Oct 02 2022 Dennis van Raaij <dvraaij@fedoraproject.org> - 25.0-1
 - Updated to v25.0.
 
